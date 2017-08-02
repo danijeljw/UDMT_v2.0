@@ -19,10 +19,10 @@ function global:TargetMachineName{
     Set-Variable -Name "TargetMachine" -Value (Read-Host "Target machine IT number") 
 
 <#
-=======================
-    USER MIGRATION TOOL
-    START HERE
-=======================
+=============================
+=    USER MIGRATION TOOL    =
+=    START HERE             =
+=============================
 #>
 
 
