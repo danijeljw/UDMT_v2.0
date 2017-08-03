@@ -18,8 +18,8 @@ function global:ShowConnectedDrives{
             #DiskModel   = $disk.Model
             #Partition   = $partition.Name
             #RawSize     = $partition.Size
-            DriveLetter = $_.DeviceID
-            VolumeName  = ($_.VolumeName -ne "C:")
+            "Drive Letter" = $_.DeviceID
+            "Drive Name"  = $_.VolumeName
             #Size        = $_.Size
             #FreeSpace   = $_.FreeSpace
           }
