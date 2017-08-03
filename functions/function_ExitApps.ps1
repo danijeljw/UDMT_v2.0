@@ -12,6 +12,9 @@ $global:CloseOpenApps = @("outlook","firefox","chrome","iexplore","winword","pow
 
 Get-Process $global:CloseOpenApps | ForEach-Object {$_.CloseMainWindow() }
 
+# Variable Cleanup
+Remove-Variable -Name CloseOpenApps -Scope Global -Force
+
 <#
 [CARRIED] $global:TargetPath
 [CARRIED] $global:DirectoryComposite

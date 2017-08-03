@@ -40,6 +40,9 @@ function global:ExportOutlookSettings{
     # Write out mapped PST for Outlook 2016
     '****************************Archive History for Office 2016' | Out-File $global:Outlook_Exported_Settings -Append
     Get-Item HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $global:Outlook_Exported_Settings -Append
+
+    # Variable Cleanup
+    Remove-Variable -Name Outlook_Exported_Settings -Scope Global -Force
 }
 
 <#
