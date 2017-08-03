@@ -1,30 +1,52 @@
-﻿function global:ExportOutlookProfileSettings{
+﻿<#
+[FROM] _DirectoryStructureComposite
+#>
 
-    #NOTE: This launches Outlook if it is not already running.
+<#
+[CARRIED] $global:TargetPath
+[CARRIED] $global:DirectoryComposite
+#>
+
+$global:Outlook_Exported_Settings = "$global:TargetPath\Users\$env:USERNAME\Desktop\Outlook_Exported_Settings.txt"
+
+function global:ExportOutlookSettings{
+
+    # NOTE: This launches Outlook if it is not already running!
+
+    # Create OutlookProfileSettings Text File
+    Out-File -FilePath $global:Outlook_Exported_Setting -Force
     
-    '****************************Currently attached archives' | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt -append
+    # Write settings to Outlook_Exported_Settings text file
+    '****************************Currently attached archives' | Out-File $global:Outlook_Exported_Settings -Append
     $Outlook = New-Object -Comobject Outlook.Application
     $Namespace = $Outlook.GetNamespace('MAPI')
     $Mailboxes = $Namespace.Stores | where {$_.ExchangeStoreType -eq 1} | Select-Object DisplayName
     $AttachedArchives = $Namespace.Stores | where {$_.ExchangeStoreType -eq 3} | Select-Object DisplayName,FilePath
-    $MailBoxes | Out-File -FilePath $Env:UserProfile\Desktop\OutlookMailboxes.txt
-    $AttachedArchives | Out-File -FilePath $Env:UserProfile\Desktop\OutlookAttachedArchives.txt
+    $MailBoxes | Out-File -FilePath $global:Outlook_Exported_Setting -Append
+    $AttachedArchives | Out-File -FilePath $global:Outlook_Exported_Setting -Append
 
+    # Write out mapped PST for Outlook 2007
+    '****************************Archive History for Office 2007' | Out-File $global:Outlook_Exported_Settings -Append
+    Get-Item HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $global:Outlook_Exported_Settings -Append
 
-    '****************************Archive History for Office 2007' | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt -append
-    get-item HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog | select -expandProperty property | where {$_ -match '.pst$'} | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt
+    # Write out mapped PST for Outlook 2010
+    '****************************Archive History for Office 2010' | Out-File $global:Outlook_Exported_Settings -Append
+    Get-Item HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $global:Outlook_Exported_Settings -Append
 
+    # Write out mapped PST for Outlook 2013
+    '****************************Archive History for Office 2013' | Out-File $global:Outlook_Exported_Settings -Append
+    Get-Item HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $global:Outlook_Exported_Settings -Append
 
-    '****************************Archive History for Office 2010' | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt -append
-    get-item HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog | select -expandProperty property | where {$_ -match '.pst$'} | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt
-
-
-    '****************************Archive History for Office 2013' | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt -append
-    get-item HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog | select -expandProperty property | where {$_ -match '.pst$'} | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt -append
-
-
-    '****************************Archive History for Office 2016' | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt -append
-    get-item HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog | select -expandProperty property | where {$_ -match '.pst$'} | Out-File $Env:UserProfile\Desktop\ArchiveHistory.txt -append
+    # Write out mapped PST for Outlook 2016
+    '****************************Archive History for Office 2016' | Out-File $global:Outlook_Exported_Settings -Append
+    Get-Item HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $global:Outlook_Exported_Settings -Append
 }
 
-# From here go on to _ExitApps.ps1
+<#
+[CARRIED] $global:TargetPath
+[CARRIED] $global:DirectoryComposite
+#>
+
+<#
+[GOTO] _ExitApps
+#>
