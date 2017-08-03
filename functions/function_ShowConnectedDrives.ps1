@@ -1,6 +1,12 @@
-﻿# Show list of connected drives by drive path
+﻿<#
+[FROM] _QueryUSBDriveConnected
+#>
 
+# Show list of connected drives (physical/USB) to allow user to connect to one
 function global:ShowConnectedDrives{
+    # Clear the screen of text first
+    Clear-Host
+    Write-Host "The drives you currently have connected are:" -ForegroundColor DarkYellow -BackgroundColor DarkGray
     Get-WmiObject Win32_DiskDrive | % {
       $disk = $_
       $partitions = "ASSOCIATORS OF " +
@@ -27,3 +33,7 @@ function global:ShowConnectedDrives{
       }
     }
 }
+
+<#
+[GOTO] _DriveSelected
+#>
