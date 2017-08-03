@@ -1,9 +1,14 @@
-﻿# From drive selected to backup to
+﻿<#
+[FROM] _DriveSelected
+#>
 
-$global:DriveSelected = $NULL
+<#
+[CARRIED] $global:SelectedDrive
+#>
+
 $global:CurrentYearOnly = (Get-Date).Year
-$global:BasePath = $global:DriveSelected\ICT_USB_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME
-
+$global:TargetPath = "$global:SelectedDrive\ICT_USB_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME"
+# ie - $global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
 $global:DirectoryComposite = @("Contacts",
                                "Desktop",
                                "Documents",
@@ -13,16 +18,6 @@ $global:DirectoryComposite = @("Contacts",
                                "Music",
                                "Pictures",
                                "Searches")
-
-function global:DirectoryStructureComposite{
-    If (-Not(Test-Path variable:global:DriveSelected)){
-        Write-Host "DriveSelected variable not defined!"
-        Write-Host "Exiting in 3 seconds"
-        Start-Sleep -s 3
-        Exit
-    }
-}
-
 
 If ( Test-Path $global:DriveSelected\ICT_USB_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME ) {
     # beeps to alert user
