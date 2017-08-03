@@ -64,5 +64,5 @@ function global:DirectoryStructureComposite{
 #>
 
 <#
-[GOTO] _DriveSelected
+[GOTO] _ExportOutlookSettings
 #>
