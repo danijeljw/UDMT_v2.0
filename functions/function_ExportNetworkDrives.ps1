@@ -1,39 +1,39 @@
-﻿#[FROM] backup files and folders
-
-#????????
-$global:NetworkDrivesBat = $NULL
-#????????
-$global:BasePath = $global:DriveSelected\ICT_USB_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME
+﻿<#
+[FROM] BackupFilesAndFolders
+#>
 
 
+<#
+[CARRIED] $global:TargetPath
+[CARRIED] $global:DirectoryComposite
+#>
 
 
-function global:SaveNetworkDrives{
-
+function global:ExportNetworkDrives{
     # Write network drives to K:\PC_Migration\Drives.txt
-    Get-WmiObject -Class:Win32_MappedLogicalDisk | Select name,providername > $global:BasePath\Drives.txt
+    Get-WmiObject -Class:Win32_MappedLogicalDisk | Select name,providername > "$global:TargetPath\Drives1.txt"
 
     # Delete whitespace at end of each line
-    Get-Content "K:\PC_Migration\Drives.txt" | ForEach-Object {$_.TrimEnd()} | Set-Content "K:\PC_Migration\Drives2.txt"
+    Get-Content "$global:TargetPath\Drives1.txt" | ForEach-Object {$_.TrimEnd()} | Set-Content "$global:TargetPath\Drives2.txt"
 
     # Replace gap in drive assignment and path
-    Get-Content "K:\PC_Migration\Drives2.txt" | ForEach-Object { $_ -replace ':   ', ': ' } | Set-Content "K:\PC_Migration\Drives3.txt"
+    Get-Content "$global:TargetPath\Drives2.txt" | ForEach-Object { $_ -replace ':   ', ': ' } | Set-Content "$global:TargetPath\Drives3.txt"
 
     # Add 'net use ' to start of each line
-    Get-Content "K:\PC_Migration\Drives3.txt" | ForEach-Object {"net use " + $_ } | Set-Content "K:\PC_Migration\Drives4.txt"
+    Get-Content "$global:TargetPath\Drives3.txt" | ForEach-Object {"net use " + $_ } | Set-Content "$global:TargetPath\Drives4.txt"
 
-    # Add ' /P' to end of each line for persistence of connection after restart
-    Get-Content "K:\PC_Migration\Drives4.txt" | ForEach-Object {$_ + " /P" } | Set-Content "K:\Network_Drives.bat"
+    # Add ' /P:Yes' to end of each line for persistence of connection after restart
+    Get-Content "$global:TargetPath\Drives4.txt" | ForEach-Object {$_ + " /P:Yes" } | Set-Content "$global:TargetPath\Drives.bat"
 
     # Clean up reduntant files
-    Rm "K:\PC_Migration\*.txt"
-
-    # Network drives saved notification
-    Write-Host "Network drives saved to K:\Network_Drives.bat"
-    Start-Sleep -s 5
-    }
+    Remove-Item "$global:TargetPath\Drives*.txt" -Force
 }
 
 <#
-[GOTO] _BackupNetworkDrives
+[CARRIED] $global:TargetPath
+[CARRIED] $global:DirectoryComposite
+#>
+
+<#
+[GOTO] _ExportNetworkPrinters
 #>
