@@ -6,7 +6,7 @@
 function global:ShowConnectedDrives{
     # Clear the screen of text first
     Clear-Host
-    Write-Host "The drives you currently have connected are:" -ForegroundColor DarkYellow -BackgroundColor DarkGray
+    Write-Host "The drives you currently have connected are:" -ForegroundColor Yellow -BackgroundColor DarkGray
     Get-WmiObject Win32_DiskDrive | % {
       $disk = $_
       $partitions = "ASSOCIATORS OF " +

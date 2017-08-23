@@ -1,5 +1,5 @@
 ﻿<#
-This script is fun from UMT_USB_Backup.ps1
+This script is run from UMT_USB_Backup.ps1
 #>
 
 $global:IsUserIDCorrect = $NULL

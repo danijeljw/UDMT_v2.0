@@ -1,0 +1,24 @@
+My problem was that I could not boot Windows, and I needed a way to access my files on a Bitlocked partition. In order to do this, you need a bitlocker recovery password (8 groups of digits) and the ability to boot your system from USB.
+
+    Download and install LiLi on an other Windows machine (Linux Live USB Creator)
+    Start LiLi and have it download a lightweight ubuntu image. I chose Xubuntu.
+    Install the image to your USB stick.
+    Boot the problematic machine with the USB stick
+    When you see the ubuntu boot screen, press a key.
+    Under F6, set the following options: nomodeset, acpi=off, noacpi and nolacpi
+    Boot ubuntu.
+    Make a folder /media/windows and /media/mount.
+    Download and extract dislocker (http://www.hsc.fr/ressources/outils/dislocker/download/dislocker-0.7.1.tar.gz)
+    sudo apt-get install libfuse-dev libpolarssl-dev
+    change directory to the dislocker/src folder
+    sudo make
+    sudo make install
+    change directory to /usr/bin
+    sudo fdisk -l
+    identify the partition which is bitlocked. Mine was /dev/sda1.
+    sudo dislocker -r -V /dev/sda1 -p315442-000000-000000-000000-000000-000000-000000-000000 -- /media/windows (replace your own bitlocker key and source partition)
+    change dir to /media/windows (use sudo -i if you can't access it)
+    mount -o loop dislocker-file /media/mount
+    You should now see your files in a mounted drive of the file manager.
+
+Backups are fairly slow, but it might save some trouble if you do end up reinstalling windows. Good luck!
