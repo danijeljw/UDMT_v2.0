@@ -53,5 +53,5 @@ This code was in the original script, and relied solely on the PowerShell window
 #>
 
 <#
-[GOTO] _DirectoryStructureComposite
+[GOTO] _DirectoryStructurComposite
 #>
