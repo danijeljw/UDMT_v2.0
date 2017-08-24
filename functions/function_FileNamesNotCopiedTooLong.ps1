@@ -8,8 +8,8 @@
 #>
 
 
-$global:TooLongFileNamesUserData = "$global:TargetPath\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserData.txt"
-$global:TooLongFileNamesUsersUserID = "$global:TargetPath\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserID.txt"
+$global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserData.txt"
+$global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserID.txt"
 
 
 function global:FileNamesNotCopiedTooLong{

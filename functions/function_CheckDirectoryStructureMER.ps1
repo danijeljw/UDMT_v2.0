@@ -6,9 +6,16 @@
 [CARRIED] $global:SelectedDrive
 #>
 
+# current year only
 $global:CurrentYearOnly = (Get-Date).Year
-$global:TargetPath = "$global:SelectedDrive\ICT_USB_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME"
-# ie - $global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
+
+# target path for MINI MER backup folder to be
+$global:TargetPath = "$global:SelectedDrive\MINI_MER_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME"
+
+#
+# ie - $global:TargetPath = X:\MINI_MER_BACKUP_2017\IT12345
+#
+
 
 # explicitly define dictionary to folder structure required
 $global:DirectoryComposite = @("Contacts",
@@ -21,6 +28,7 @@ $global:DirectoryComposite = @("Contacts",
                                "Pictures",
                                "Searches")
 
+# check the directory exists, if does, confirm to overwrite
 function global:DirectoryStructureComposite{
     If ( Test-Path $global:TargetPath ) {
         # beeps to alert user
@@ -39,13 +47,6 @@ function global:DirectoryStructureComposite{
             [console]::beep(2000,500)
             [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError 1002","User Request Exit")
         }
-    <#
-    [LEGACY CODE]
-
-    This code was in the original script, and relied solely on the PowerShell window only, it moved away to a Windows-based theme instead
-
-        Write-Host "UDMT Folder Structure Exists!" -BackgroundColor Black -ForegroundColor DarkCyan
-    #>
     } Else {
         # Make the UserData folder
         New-Item $global:TargetPath\UserData -ItemType Directory -Force

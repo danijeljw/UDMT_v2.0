@@ -7,7 +7,7 @@
 [CARRIED] $global:DirectoryComposite
 #>
 
-$global:Outlook_Exported_Settings = "$global:TargetPath\Users\$env:USERNAME\Desktop\Outlook_Exported_Settings.txt"
+$global:Outlook_Exported_Settings = "$global:TargetPath\Users\$env:USERNAME\$global:DirectoryComposite[1]\Outlook_Exported_Settings.txt"
 
 function global:ExportOutlookSettings{
 

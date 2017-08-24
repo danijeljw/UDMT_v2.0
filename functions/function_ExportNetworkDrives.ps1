@@ -11,7 +11,7 @@
 
 function global:ExportNetworkDrives{
     # Write network drives to K:\PC_Migration\Drives.txt
-    Get-WmiObject -Class:Win32_MappedLogicalDisk | Select name,providername > "$global:TargetPath\Drives1.txt"
+  "$global:TargetPath\Drives1.txt"
 
     # Delete whitespace at end of each line
     Get-Content "$global:TargetPath\Drives1.txt" | ForEach-Object {$_.TrimEnd()} | Set-Content "$global:TargetPath\Drives2.txt"
@@ -36,4 +36,17 @@ function global:ExportNetworkDrives{
 
 <#
 [GOTO] _ExportNetworkPrinters
+#>
+
+
+
+
+<#
+
+REMOVE BLANK LINES
+$r | ? {$_.trim() -ne ""}
+
+
+THEN ACTION OVER VARIABLES PRE-SET
+$s = ($r | ? {$_.trim() -ne ""}) 
 #>
