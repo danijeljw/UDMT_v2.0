@@ -9,7 +9,7 @@
 #>
 
 function global:ExportNetworkPrinters{
-    Get-WMIObject Win32_Printer -ComputerName $env:COMPUTERNAME | where{$_.Name -like “*\\*”} | select sharename,name | Out-File "$global:TargetPath\Printers.txt" -Append
+    Get-WMIObject Win32_Printer -ComputerName $env:COMPUTERNAME | where{$_.Name -like “*\\*”} | select name | Out-File "$global:TargetPath\Printers.txt" -Append
 }
 
 <#
