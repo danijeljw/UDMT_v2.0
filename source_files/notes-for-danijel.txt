@@ -1,0 +1,11 @@
+OPEN THESE TWO FILES WHEN FINALISED!!!!
+
+$global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserData.txt"
+$global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserID.txt"
+
+
+
+
+
+WHERE IS THIS POINTING TO?
+$global:TargetPath 
