@@ -5,12 +5,7 @@
 $Global:SelectedDrive = $NULL
 
 function global:DriveSelected{
-    If (-Not(Test-Path variable:global:SelectedDrive)){
-        Write-Host "SelectedDrive variable not defined!"
-        Write-Host "Exiting in 3 seconds"
-        Start-Sleep -s 3
-        Exit
-    }
+
     # Wait 3 seconds before firing up
     Start-Sleep -s 3
     [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
