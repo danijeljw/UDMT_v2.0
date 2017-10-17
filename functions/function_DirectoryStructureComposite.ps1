@@ -52,7 +52,7 @@ function global:DirectoryStructureComposite{
             New-Item $global:BasePath\Users\$env:USERNAME\$x -ItemType Directory -Force
         }
     }
-    # Clean up defunct code no longer required
+    # Cleanup no-longer required variables
     Remove-Variable -Name CurrentYearOnly -Scope Global -Force
 }
 
