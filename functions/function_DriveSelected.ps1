@@ -18,11 +18,11 @@ function global:DriveSelected{
     $global:SelectedDrive = [Microsoft.VisualBasic.Interaction]::InputBox("From the drives listed in the blue window, type just the LETTER of the drive from the list you want to back up to and click on the OK button.", "Drive Letter Selection", "X")
     
     # Regex to test drive letter is only [D, E, F, H, I, J, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
-    $A2Z_Only = "^[abd-fh-jl-zABD-FH-JL-Z]+$"
+    $A2Z_Only = "^[d-fh-jl-zD-FH-JL-Z]+$"
 
     # Match drive letter provided is as per regex test, else exit
     If(-Not($global:SelectedDrive -match $A2Z_Only)){
-        [System.Windows.Forms.MessageBox]::Show($global:SelectedDrive + " is not a valid drive letter`n`nExiting app.","Incorrect Drive Letter Provided")
+        [System.Windows.Forms.MessageBox]::Show($global:SelectedDrive + " is not a valid drive letter`n`nExiting Error: A1045.","Incorrect Drive Letter Provided")
         Exit
     }
 
