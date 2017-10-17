@@ -9,13 +9,7 @@
 $Global:USBDriveConnectedQuery = $NULL
 
 function global:QueryUSBDriveConnected{
-    # Global param test built-in or exit
-    If (-Not(Test-Path variable:global:USBDriveConnectedQuery)){
-        Write-Host "USBDriveConnectedQuery variable not defined!"
-        Write-Host "Exiting in 3 seconds"
-        Start-Sleep -s 3
-        Exit
-    }
+
     # Box window asking user input Yes/No
     Add-Type -AssemblyName PresentationCore,PresentationFramework
     $ButtonType = [System.Windows.MessageBoxButton]::YesNo
