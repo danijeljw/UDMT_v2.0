@@ -3,15 +3,15 @@
 #>
 
 <#
-[CARRIED] $global:SelectedDrive
+[CARRIED] $Global:SelectedDrive
 #>
 
-$global:CurrentYearOnly = (Get-Date).Year
-$global:TargetPath = "$global:SelectedDrive\ICT_USB_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME"
-# ie - $global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
+$Global:CurrentYearOnly = (Get-Date).Year
+$Global:TargetPath = "$Global:SelectedDrive\ICT_USB_BACKUP_$Global:CurrentYearOnly\$env:COMPUTERNAME"
+# ie - $Global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
 
 # Define the folders in in the UserProfile folder in C:\Users\X
-$global:DirectoryComposite = @("Contacts",
+$Global:DirectoryComposite = @("Contacts",
                                "Desktop",
                                "Documents",
                                "Downloads",
@@ -22,7 +22,7 @@ $global:DirectoryComposite = @("Contacts",
                                "Searches")
 
 function global:DirectoryStructureComposite{
-    If ( Test-Path $global:TargetPath ) {
+    If ( Test-Path $Global:TargetPath ) {
         # beeps to alert user
         [console]::beep(2000,500)
         [console]::beep(2000,500)
@@ -42,14 +42,14 @@ function global:DirectoryStructureComposite{
 
     } Else {
         # Make the C:\UserData folder on the USB drive
-        New-Item $global:TargetPath\UserData -ItemType Directory -Force
+        New-Item $Global:TargetPath\UserData -ItemType Directory -Force
 
         # Create an Outlook signatures folder on the USB drive
-        New-Item $global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures -ItemType Directory -Force
+        New-Item $Global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures -ItemType Directory -Force
     
-        # Using folders listed in the array $global:DirectoryComposite, create personal user data store tree
-        ForEach ( $x in $global:DirectoryComposite ){
-            New-Item $global:BasePath\Users\$env:USERNAME\$x -ItemType Directory -Force
+        # Using folders listed in the array $Global:DirectoryComposite, create each folder
+        ForEach ( $x in $Global:DirectoryComposite ){
+            New-Item $Global:BasePath\Users\$env:USERNAME\$x -ItemType Directory -Force
         }
     }
     # Cleanup no-longer required variables
@@ -58,8 +58,8 @@ function global:DirectoryStructureComposite{
 
 
 <#
-[CARRIED] $global:TargetPath
-[CARRIED] $global:DirectoryComposite
+[CARRIED] $Global:TargetPath
+[CARRIED] $Global:DirectoryComposite
 #>
 
 <#
