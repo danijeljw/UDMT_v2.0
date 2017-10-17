@@ -17,8 +17,8 @@ function global:DriveSelected{
     # $global:SelectedDrive variable is set to letter that carries through rest of script now
     $global:SelectedDrive = [Microsoft.VisualBasic.Interaction]::InputBox("From the drives listed in the blue window, type just the LETTER of the drive from the list you want to back up to and click on the OK button.", "Drive Letter Selection", "X")
     
-    # Regex to test drive letter is only [D, E, F, G, H, I, J, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
-    $A2Z_Only = "^[abd-jl-zABD-JL-Z]+$"
+    # Regex to test drive letter is only [D, E, F, H, I, J, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
+    $A2Z_Only = "^[abd-fh-jl-zABD-FH-JL-Z]+$"
 
     # Match drive letter provided is as per regex test, else exit
     If(-Not($global:SelectedDrive -match $A2Z_Only)){
