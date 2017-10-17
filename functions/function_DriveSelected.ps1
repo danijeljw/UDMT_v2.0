@@ -2,8 +2,6 @@
 [FROM] _ShowConnectedDrives
 #>
 
-$Global:SelectedDrive = $NULL
-
 function global:DriveSelected{
 
     # Wait 3 seconds before firing up
@@ -28,16 +26,15 @@ function global:DriveSelected{
         Exit
     }
 
-
-<#
-[CARRIED] $Global:SelectedDrive
-#>
-
     # Let the user know backup will commence to the drive X they selected
     [System.Windows.Forms.MessageBox]::Show("The USB drive you selected is " + $Global:SelectedDrive + ".`nDo not disconnect the drive until process finalised.`n`nThis process can take between 15-60 minutes to complete!","Data Backup Start",0) 
 }
 
 DriveSelected
+
+<#
+[CARRIED] $Global:SelectedDrive
+#>
 
 <#
 [GOTO] _DirectoryStructureComposite

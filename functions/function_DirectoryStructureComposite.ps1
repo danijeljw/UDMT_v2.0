@@ -21,7 +21,7 @@ $Global:DirectoryComposite = @("Contacts",
                                "Pictures",
                                "Searches")
 
-function global:DirectoryStructureComposite{
+function Global:DirectoryStructureComposite{
     If ( Test-Path $Global:TargetPath ) {
 
         # beeps to alert user
@@ -46,20 +46,20 @@ function global:DirectoryStructureComposite{
 }
 
 # Call functions
-global:DirectoryStructureComposite
+Global:DirectoryStructureComposite
 
 # Make the C:\UserData folder on the USB drive
-New-Item $Global:TargetPath\UserData -ItemType Directory -Force
+New-Item "$Global:TargetPath\UserData" -ItemType Directory -Force
 
 # Create an Outlook signatures folder on the USB drive
-New-Item $Global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures -ItemType Directory -Force
+New-Item "$Global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures" -ItemType Directory -Force
 
 # Create Google Chrome bookmarks folder on the USB drive
 New-Item "$Global:TargetPath\Users\$env:USERNAME\AppData\Local\Google\Chrome\User Data\Default"
     
 # Using folders listed in the array $Global:DirectoryComposite, create each folder
 ForEach ( $x in $Global:DirectoryComposite ){
-    New-Item $Global:BasePath\Users\$env:USERNAME\$x -ItemType Directory -Force
+    New-Item $Global:TargetPath\Users\$env:USERNAME\$x -ItemType Directory -Force
     
 }
 
