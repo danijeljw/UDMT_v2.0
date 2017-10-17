@@ -24,9 +24,9 @@ $Global:DirectoryComposite = @("Contacts",
 function global:DirectoryStructureComposite{
     If ( Test-Path $Global:TargetPath ) {
         # beeps to alert user
+        [console]::beep(1000,500)
         [console]::beep(2000,500)
-        [console]::beep(2000,500)
-        [console]::beep(2000,500)
+        [console]::beep(1000,500)
         # Path for current machine exists, confirm to overwrite with the word "YES"
         [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
         $ContinueYes = [Microsoft.VisualBasic.Interaction]::InputBox("Backup of " + $env:COMPUTERNAME + " already exists.`n`nType 'YES' into box to continue", "Backup Directory Exists", "YES")
