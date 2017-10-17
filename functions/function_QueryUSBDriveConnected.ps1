@@ -23,7 +23,7 @@ function global:QueryUSBDriveConnected{
         Add-Type -AssemblyName PresentationCore,PresentationFramework
         $ButtonType = [System.Windows.MessageBoxButton]::OK
         $MessageIcon = [System.Windows.MessageBoxImage]::Error
-        $MessageBody = "USB hard drive needs to be connected before running UDTM!`n`nExiting application."
+        $MessageBody = "USB hard drive needs to be connected before running UDMT 2.0!`n`nExiting application."
         $MessageTitle = "Error!"
         $Global:QueryUSBDriveConnected = [System.Windows.MessageBox]::Show($MessageBody,$MessageTitle,$ButtonType,$MessageIcon)
         # Exit here because USB HDD not connected first
