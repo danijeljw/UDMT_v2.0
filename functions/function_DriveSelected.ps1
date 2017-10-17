@@ -20,17 +20,18 @@ function global:DriveSelected{
     # Regex to test drive letter is only [D, E, F, H, I, J, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
     $A2Z_Only = "^[d-fh-jl-zD-FH-JL-Z]+$"
 
+    # Ensure that ONLY a drive letter is provided, else exit
+    If($global:SelectedDrive.length -gt 1){
+        [System.Windows.Forms.MessageBox]::Show($global:SelectedDrive + " is not just the drive letter`n`nExiting app.","Not Just Drive Letter Provided")
+        Exit
+    }
+
     # Match drive letter provided is as per regex test, else exit
     If(-Not($global:SelectedDrive -match $A2Z_Only)){
         [System.Windows.Forms.MessageBox]::Show($global:SelectedDrive + " is not a valid drive letter`n`nExiting Error: A1045.","Incorrect Drive Letter Provided")
         Exit
     }
 
-    # Ensure that ONLY a drive letter is provided, else exit
-    If($global:SelectedDrive.length -gt 1){
-        [System.Windows.Forms.MessageBox]::Show($global:SelectedDrive + " is not just the drive letter`n`nExiting app.","Not Just Drive Letter Provided")
-        Exit
-    }
 
 <#
 [CARRIED] $global:SelectedDrive
