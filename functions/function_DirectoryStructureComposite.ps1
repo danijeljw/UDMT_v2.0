@@ -48,7 +48,7 @@ function global:DirectoryStructureComposite{
         # Create an Outlook signatures folder on the USB drive
         New-Item $Global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures -ItemType Directory -Force
 
-        # Create Google Chrome bookmarks folder
+        # Create Google Chrome bookmarks folder on the USB drive
         New-Item "$Global:TargetPath\Users\$env:USERNAME\AppData\Local\Google\Chrome\User Data\Default"
     
         # Using folders listed in the array $Global:DirectoryComposite, create each folder
@@ -56,6 +56,7 @@ function global:DirectoryStructureComposite{
             New-Item $Global:BasePath\Users\$env:USERNAME\$x -ItemType Directory -Force
         }
     }
+
     # Cleanup no-longer required variables
     Remove-Variable -Name CurrentYearOnly -Scope Global -Force
 }
