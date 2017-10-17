@@ -33,6 +33,7 @@ function global:ShowConnectedDrives{
       }
     }
 }
+ShowConnectedDrives
 
 <#
 [GOTO] _DriveSelected

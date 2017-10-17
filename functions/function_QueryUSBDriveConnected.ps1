@@ -39,6 +39,8 @@ function global:QueryUSBDriveConnected{
     }
 }
 
+QueryUSBDriveConnected
+
 <#
 [GOTO] _ShowConnectedDrives
 #>

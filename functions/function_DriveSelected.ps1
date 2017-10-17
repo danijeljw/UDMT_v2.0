@@ -37,7 +37,7 @@ function global:DriveSelected{
 #>
 
     # Let the user know backup will commence to the drive X they selected
-    [System.Windows.Forms.MessageBox]::Show("The USB drive you selected is " + $global:SelectedDrive + ".`nDo not disconnect the drive until process finalised.","Data Backup Start",0) 
+    [System.Windows.Forms.MessageBox]::Show("The USB drive you selected is " + $global:SelectedDrive + ".`nDo not disconnect the drive until process finalised.`n`nThis process can take between 15-60 minutes to complete!","Data Backup Start",0) 
 }
 
 <#
@@ -52,6 +52,8 @@ This code was in the original script, and relied solely on the PowerShell window
     Write-Host "Drive selected is" $global:SelectedDrive
 #>
 
+DriveSelected
+
 <#
-[GOTO] _DirectoryStructurComposite
+[GOTO] _DirectoryStructureComposite
 #>
