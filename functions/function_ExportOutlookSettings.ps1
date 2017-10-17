@@ -22,8 +22,8 @@ function global:ExportOutlookSettings{
     $Namespace = $Outlook.GetNamespace('MAPI')
     $Mailboxes = $Namespace.Stores | where {$_.ExchangeStoreType -eq 1} | Select-Object DisplayName
     $AttachedArchives = $Namespace.Stores | where {$_.ExchangeStoreType -eq 3} | Select-Object DisplayName,FilePath
-    $MailBoxes | Out-File -FilePath $Global:Outlook_Exported_Setting -Append
-    $AttachedArchives | Out-File -FilePath $Global:Outlook_Exported_Setting -Append
+    $MailBoxes | Out-File -FilePath $Global:Outlook_Exported_Settings -Append
+    $AttachedArchives | Out-File -FilePath $Global:Outlook_Exported_Settings -Append
 
     # Write out mapped PST for Outlook 2007
     '****************************Archive History for Office 2007' | Out-File $Global:Outlook_Exported_Settings -Append
