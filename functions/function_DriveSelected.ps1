@@ -27,7 +27,7 @@ function global:DriveSelected{
     }
 
     # Ensure that ONLY a drive letter is provided, else exit
-    If($global:SelectedDrive.legth -gt 1){
+    If($global:SelectedDrive.length -gt 1){
         [System.Windows.Forms.MessageBox]::Show($global:SelectedDrive + " is not just the drive letter`n`nExiting app.","Not Just Drive Letter Provided")
         Exit
     }
