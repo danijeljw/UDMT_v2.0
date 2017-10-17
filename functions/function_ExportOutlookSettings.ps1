@@ -14,7 +14,7 @@ function global:ExportOutlookSettings{
     # NOTE: This launches Outlook if it is not already running!
 
     # Create OutlookProfileSettings Text File
-    Out-File -FilePath $Global:Outlook_Exported_Setting -Force
+    Out-File -FilePath $Global:Outlook_Exported_Settings -Force
     
     # Write settings to Outlook_Exported_Settings text file
     '****************************Currently attached archives' | Out-File $Global:Outlook_Exported_Settings -Append
