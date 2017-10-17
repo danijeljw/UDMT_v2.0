@@ -39,13 +39,7 @@ function global:DirectoryStructureComposite{
             [console]::beep(2000,500)
             [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError 1002","User Request Exit")
         }
-    <#
-    [LEGACY CODE]
 
-    This code was in the original script, and relied solely on the PowerShell window only, it moved away to a Windows-based theme instead
-
-        Write-Host "UDMT Folder Structure Exists!" -BackgroundColor Black -ForegroundColor DarkCyan
-    #>
     } Else {
         # Make the UserData folder
         New-Item $global:TargetPath\UserData -ItemType Directory -Force
