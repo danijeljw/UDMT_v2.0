@@ -10,7 +10,7 @@ $global:CurrentYearOnly = (Get-Date).Year
 $global:TargetPath = "$global:SelectedDrive\ICT_USB_BACKUP_$global:CurrentYearOnly\$env:COMPUTERNAME"
 # ie - $global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
 
-# explicitly define dictionary to folder structure required
+# Define the folders in in the UserProfile folder in C:\Users\X
 $global:DirectoryComposite = @("Contacts",
                                "Desktop",
                                "Documents",
@@ -41,10 +41,10 @@ function global:DirectoryStructureComposite{
         }
 
     } Else {
-        # Make the UserData folder
+        # Make the C:\UserData folder on the USB drive
         New-Item $global:TargetPath\UserData -ItemType Directory -Force
 
-        # Create an Outlook signatures folder
+        # Create an Outlook signatures folder on the USB drive
         New-Item $global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures -ItemType Directory -Force
     
         # Using folders listed in the array $global:DirectoryComposite create personal user data store tree
