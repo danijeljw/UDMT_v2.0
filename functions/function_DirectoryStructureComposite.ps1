@@ -38,6 +38,7 @@ function global:DirectoryStructureComposite{
             [console]::beep(2000,500)
             [console]::beep(2000,500)
             [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError 1002","User Request Exit")
+            Exit
         }
 
     } Else {
