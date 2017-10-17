@@ -4,6 +4,7 @@
 
 # Show list of connected drives (physical/USB) to allow user to connect to one
 function global:ShowConnectedDrives{
+
     # Clear the screen of text first
     Clear-Host
     Write-Host "The drives you currently have connected are:" -ForegroundColor Yellow -BackgroundColor DarkGray
@@ -27,7 +28,7 @@ function global:ShowConnectedDrives{
             "Drive Letter" = $_.DeviceID
             "Drive Name"  = $_.VolumeName
             #Size        = $_.Size
-            #FreeSpace   = $_.FreeSpace
+            "GB Free"   = [int](($_.FreeSpace/1048576)/1000)
           }
         }
       }
