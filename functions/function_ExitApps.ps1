@@ -10,6 +10,8 @@
 # List of apps that need to be closed if they're currently open as an array
 $global:CloseOpenApps = @("outlook","firefox","chrome","iexplore","winword","powerpnt","onenote","excel")
 
+
+
 Get-Process $global:CloseOpenApps | ForEach-Object {$_.CloseMainWindow() }
 
 # Variable Cleanup
