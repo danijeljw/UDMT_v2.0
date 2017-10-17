@@ -35,8 +35,8 @@ function global:DirectoryStructureComposite{
         # If "YES" or "yes" is not typed in, will exit here, using regex
         $YES_Only = "^[esyESY]+$"
         If (-not( $ContinueYes -match $YES_Only)){
-            [console]::beep(2000,500)
-            [console]::beep(2000,500)
+            [console]::beep(1000,500)
+            [console]::beep(1000,500)
             [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError 1002","User Request Exit")
             Exit
         }
