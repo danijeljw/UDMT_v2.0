@@ -25,24 +25,48 @@ function global:ExportOutlookSettings{
     $MailBoxes | Out-File -FilePath $Global:Outlook_Exported_Settings -Append
     $AttachedArchives | Out-File -FilePath $Global:Outlook_Exported_Settings -Append
 
+
     # Write out mapped PST for Outlook 2007
     '****************************Archive History for Office 2007' | Out-File $Global:Outlook_Exported_Settings -Append
-    Get-Item HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    If ((Test-Path HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog) -eq $True){
+        Get-Item HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    }Else{
+        'NO DATA EXISTS for Office 2007' | Out-File $Global:Outlook_Exported_Settings -Append
+        '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
+    }
+
 
     # Write out mapped PST for Outlook 2010
     '****************************Archive History for Office 2010' | Out-File $Global:Outlook_Exported_Settings -Append
-    Get-Item HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    If ((Test-Path HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog) -eq $True){
+        Get-Item HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    }Else{
+        'NO DATA EXISTS for Office 2010' | Out-File $Global:Outlook_Exported_Settings -Append
+        '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
+    }
+
 
     # Write out mapped PST for Outlook 2013
     '****************************Archive History for Office 2013' | Out-File $Global:Outlook_Exported_Settings -Append
-    Get-Item HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    If ((Test-Path HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog) -eq $True){
+        Get-Item HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    }Else{
+        'NO DATA EXISTS for Office 2013' | Out-File $Global:Outlook_Exported_Settings -Append
+        '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
+    }
 
     # Write out mapped PST for Outlook 2016
     '****************************Archive History for Office 2016' | Out-File $Global:Outlook_Exported_Settings -Append
-    Get-Item HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    If ((Test-Path HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog) -eq $True){
+        Get-Item HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
+    }Else{
+        'NO DATA EXISTS for Office 2013' | Out-File $Global:Outlook_Exported_Settings -Append
+        '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
+    }
 
     # Variable Cleanup
-    Remove-Variable -Name Outlook_Exported_Settings -Scope Global -Force
+    #Remove-Variable -Name Outlook_Exported_Settings -Scope Global -Force
+    # not sure if i should leave this here or move it down?
 }
 
 <#
