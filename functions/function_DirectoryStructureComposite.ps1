@@ -47,7 +47,7 @@ function global:DirectoryStructureComposite{
         # Create an Outlook signatures folder on the USB drive
         New-Item $global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures -ItemType Directory -Force
     
-        # Using folders listed in the array $global:DirectoryComposite create personal user data store tree
+        # Using folders listed in the array $global:DirectoryComposite, create personal user data store tree
         ForEach ( $x in $global:DirectoryComposite ){
             New-Item $global:BasePath\Users\$env:USERNAME\$x -ItemType Directory -Force
         }
