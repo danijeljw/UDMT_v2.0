@@ -21,14 +21,20 @@
     }
 }
 
-
 QueryUSBDriveConnected
-<#
 
 # Prompt with list of apps that are required to be closed
 [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
 $Global:Apps2Shutdown = [Microsoft.VisualBasic.Interaction]::InputBox("The following applications will be closed automatically:`n`nWord, Excel, Outlook, PowerPoint, OneNote, Internet Explorer, Google Chrome`n`n`nType 'YES' into the box and click OK to confirm.", "Closing Mandatory Apps", "No")
 
+# If not OK to close these applications, exit program
+$YES_Only = "^[esyESY]+$"
+If (-not( $Global:Apps2Shutdown -match $YES_Only)){
+    [console]::beep(1000,500)
+    [console]::beep(1000,500)
+    [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError G404","User Request Exit")
+    Exit
+}
 
 function global:ShowConnectedDrives{
 
@@ -91,6 +97,10 @@ function global:ShowConnectedDrives{
 }
 
 ShowConnectedDrives
+
+<#
+EVERYTHING TO HERE WORKS
+#>
 
 function global:DriveSelected{
 
