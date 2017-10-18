@@ -22,7 +22,7 @@ $Global:DirectoryComposite = @("Contacts",
                                "Searches")
 
 function Global:DirectoryStructureComposite{
-    If ( Test-Path $Global:TargetPath ) {
+    If (Test-Path $Global:TargetPath){
 
         # beeps to alert user
         [console]::beep(1000,500)
@@ -32,17 +32,16 @@ function Global:DirectoryStructureComposite{
         # Path for current machine exists, confirm to overwrite with the word "YES"
         [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
         $ContinueYes = [Microsoft.VisualBasic.Interaction]::InputBox("Backup of " + $env:COMPUTERNAME + " already exists.`n`nType 'YES' into box to continue", "Backup Directory Exists", "YES")
-    }
 
-    # If "YES" or "yes" is not typed in, will exit here, using regex
-    $YES_Only = "^[esyESY]+$"
-    If (-not( $ContinueYes -match $YES_Only)){
-        [console]::beep(1000,500)
-        [console]::beep(1000,500)
-        [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError 1002","User Request Exit")
-        Exit
+        # If "YES" or "yes" is not typed in, will exit here, using regex
+        $YES_Only = "^[esyESY]+$"
+        If (-not( $ContinueYes -match $YES_Only)){
+            [console]::beep(1000,500)
+            [console]::beep(1000,500)
+            [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError 1002","User Request Exit")
+            Exit
+        }
     }
-
 }
 
 # Call functions
