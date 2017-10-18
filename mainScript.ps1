@@ -1,6 +1,4 @@
-﻿$Global:USBDriveConnectedQuery = $NULL
-
-function global:QueryUSBDriveConnected{
+﻿function global:QueryUSBDriveConnected{
 
     # Box window asking user input Yes/No
     Add-Type -AssemblyName PresentationCore,PresentationFramework
@@ -19,14 +17,13 @@ function global:QueryUSBDriveConnected{
         $MessageTitle = "Error!"
         $Global:QueryUSBDriveConnected = [System.Windows.MessageBox]::Show($MessageBody,$MessageTitle,$ButtonType,$MessageIcon)
         # Exit here because USB HDD not connected first
-        If ($Global:USBDriveConnectedQuery -eq "OK"){
-            Exit
-        }
+        Exit
     }
 }
 
-QueryUSBDriveConnected
 
+QueryUSBDriveConnected
+<#
 
 # Prompt with list of apps that are required to be closed
 [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
@@ -362,3 +359,5 @@ function global:ExportNetworkPrinters{
 
 ExportNetworkPrinters
 
+
+#>
