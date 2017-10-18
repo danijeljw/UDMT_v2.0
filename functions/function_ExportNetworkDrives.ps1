@@ -10,8 +10,6 @@
 
 
 function global:ExportNetworkDrives{
-    # Write network drives to K:\PC_Migration\Drives.txt
-  "$global:TargetPath\Drives1.txt"
 
     # Delete whitespace at end of each line
     Get-Content "$global:TargetPath\Drives1.txt" | ForEach-Object {$_.TrimEnd()} | Set-Content "$global:TargetPath\Drives2.txt"

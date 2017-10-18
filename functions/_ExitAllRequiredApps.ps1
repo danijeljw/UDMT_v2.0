@@ -1,6 +1,6 @@
 ﻿# Prompt with list of apps that are required to be closed
 [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
-$Global:Apps2Shutdown = [Microsoft.VisualBasic.Interaction]::InputBox("The following applications will be closed automatically:`nWord, Excel, Outlook, PowerPoint, OneNote, Internet Explorer, Google Chrome, `nType 'YES' into the box and click OK to confirm.", "Closing Mandatory Apps", "No")
+$Global:Apps2Shutdown = [Microsoft.VisualBasic.Interaction]::InputBox("The following applications will be closed automatically:`n`nWord, Excel, Outlook, PowerPoint, OneNote, Internet Explorer, Google Chrome`n`n`nType 'YES' into the box and click OK to confirm.", "Closing Mandatory Apps", "No")
 
 # Check if less than 3 characters returned in response, else exit
 If($Global:Apps2Shutdown.length -lt 3){
@@ -14,6 +14,11 @@ If($Global:Apps2Shutdown.length -gt 3){
     Exit
 }
 
+$YES_Only = "^[esyESY]+$"
+If (-not($Global:Apps2Shutdown -match $YES_Only)){
+    [System.Windows.Forms.MessageBox]::Show($Global:SelectedDrive + " is not an accepted answer.`n`nExiting app.`n`nError Code: F301","Not Just Drive Letter Provided")
+    Exit
+}
 
 
 function global:DirectoryStructureComposite{

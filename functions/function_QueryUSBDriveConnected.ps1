@@ -1,12 +1,4 @@
-﻿<#
-[FROM] Main Load
-#>
-
-<#
-[NOTICE] This has been converted from text to window based
-#>
-
-$Global:USBDriveConnectedQuery = $NULL
+﻿$Global:USBDriveConnectedQuery = $NULL
 
 function global:QueryUSBDriveConnected{
 
