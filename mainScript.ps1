@@ -27,8 +27,6 @@ function global:QueryUSBDriveConnected{
 
 QueryUSBDriveConnected
 
-# Variable Clean Up
-Remove-Variable USBDriveConnectedQuery -Scope Global
 
 # Prompt with list of apps that are required to be closed
 [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
