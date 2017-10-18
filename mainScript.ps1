@@ -98,10 +98,6 @@ function global:ShowConnectedDrives{
 
 ShowConnectedDrives
 
-<#
-EVERYTHING TO HERE WORKS
-#>
-
 function global:DriveSelected{
 
     # Wait 3 seconds before firing up
@@ -132,9 +128,9 @@ function global:DriveSelected{
 
 DriveSelected
 
-
 $Global:CurrentYearOnly = (Get-Date).Year
-$Global:TargetPath = "$Global:SelectedDrive\ICT_USB_BACKUP_$Global:CurrentYearOnly\$env:COMPUTERNAME"
+
+$Global:TargetPath = $Global:SelectedDrive + ":\ICT_USB_BACKUP_" + $Global:CurrentYearOnly + "\" + $env:COMPUTERNAME
 # ie - $Global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
 
 # Define the folders in in the UserProfile folder in C:\Users\X
@@ -181,7 +177,7 @@ New-Item "$Global:TargetPath\UserData" -ItemType Directory -Force
 New-Item "$Global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures" -ItemType Directory -Force
 
 # Create Google Chrome bookmarks folder on the USB drive
-New-Item "$Global:TargetPath\Users\$env:USERNAME\AppData\Local\Google\Chrome\User Data\Default"
+New-Item "$Global:TargetPath\Users\$env:USERNAME\AppData\Local\Google\Chrome\User Data\Default" -ItemType Directory -Force
     
 # Using folders listed in the array $Global:DirectoryComposite, create each folder
 ForEach ( $x in $Global:DirectoryComposite ){
@@ -196,7 +192,7 @@ function global:ExportOutlookSettings{
     # NOTE: This launches Outlook if it is not already running!
 
     # Create OutlookProfileSettings Text File
-    Out-File -FilePath $Global:Outlook_Exported_Settings -Force
+    New-Item $Global:Outlook_Exported_Settings -ItemType File -Force
     
     # Write settings to Outlook_Exported_Settings text file
     '****************************Currently attached archives' | Out-File $Global:Outlook_Exported_Settings -Append
@@ -251,97 +247,127 @@ function global:ExportOutlookSettings{
     # not sure if i should leave this here or move it down?
 }
 
+ExportOutlookSettings
+
 # List of apps that need to be closed if they're currently open as an array
 $global:CloseOpenApps = @("outlook","firefox","chrome","iexplore","winword","powerpnt","onenote","excel")
 
-Get-Process $global:CloseOpenApps | ForEach-Object {$_.CloseMainWindow() }
+ForEach ($process in $global:CloseOpenApps)
+    {
+        Stop-Process -Name $process -ErrorAction SilentlyContinue 
+    }
 
-# Variable Cleanup
-Remove-Variable -Name CloseOpenApps -Scope Global -Force
 
-$global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserData.txt"
-$global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\$global:DirectoryComposite[1]\FilesNotCopied-UserID.txt"
 
+
+
+
+$global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\" + $global:DirectoryComposite[1] + "\FilesNotCopied-UserData.txt"
+$global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\" + $global:DirectoryComposite[1] + "\FilesNotCopied-UserID.txt"
+
+
+New-Item $global:TooLongFileNamesUserData -ItemType File -Force
+New-Item $global:TooLongFileNamesUsersUserID -ItemType File -Force
 
 function global:FileNamesNotCopiedTooLong{
-    "*****Files from C:\UserData*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\UserData*****" | Out-File $global:TooLongFileNamesUserData -Append
     cmd /c "dir /b /s /a:d C:\UserData" | ForEach-Object{
         If ( $_.length -gt 250 ){
             $_ | Out-File $global:TooLongFileNamesUserData -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Contacts*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Contacts*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Contacts" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Desktop*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Desktop*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Desktop" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Documents*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Documents*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Documents" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Downloads*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Downloads*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Downloads" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Favourites*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Favourites*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Favourites" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Links*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Links*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Links" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Music*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Music*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Music" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Pictures*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Pictures*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Pictures" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Searches*****" | Out-File "$global:TargetPath\FilesNotCopied.txt" -Append
+    "*****Files from C:\Users\$env:USERNAME\Searches*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\UserData\$env:USERNAME\Searches" | ForEach-Object{
         If ( $_.length -gt 250){
             $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
         }
     }
-    Remove-Variable -Name TooLongFileNamesUserData -Scope Global -Force
-    Remove-Variable -Name TooLongFileNamesUsersUserID -Scope Global -Force
 }
 
-FileNamesNotCopiedToo
+FileNamesNotCopiedTooLong
+
+
+
+
+
+
+
 
 function global:BackupFilesAndFolders{
 
     # Backup UserData folder
-    Copy-Item C:\UserData\* $global:BasePath\UserData -Recurse -Force
+    Copy-Item C:\UserData\* $global:TargetPath\UserData -Recurse -Force
 
-    # Backup $DirectoryComposite folders
-    ForEach ( $r in $global:DirectoryComposite ){
-        Copy-Item "$env:USERPROFILE\$r\*" "$global:BasePath\$r" -Recurse -Force
-    }
+    # Backup each folder in UsersUserID Folder
+    If ((Test-Path $env:USERPROFILE\Contacts) -eq $True){Copy-Item "$env:USERPROFILE\Contacts\*" "$global:targetpath\Users\$env:USERNAME\Contacts\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Desktop) -eq $True){Copy-Item "$env:USERPROFILE\Desktop\*" "$global:targetpath\Users\$env:USERNAME\Desktop\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Documents) -eq $True){Copy-Item "$env:USERPROFILE\Documents\*" "$global:targetpath\Users\$env:USERNAME\Documents\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Downloads) -eq $True){Copy-Item "$env:USERPROFILE\Downloads\*" "$global:targetpath\Users\$env:USERNAME\Downloads\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Favourites) -eq $True){Copy-Item "$env:USERPROFILE\Favourites\*" "$global:targetpath\Users\$env:USERNAME\Favourites\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Links) -eq $True){Copy-Item "$env:USERPROFILE\Links\*" "$global:targetpath\Users\$env:USERNAME\Links\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Music) -eq $True){Copy-Item "$env:USERPROFILE\Music\*" "$global:targetpath\Users\$env:USERNAME\Music\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Pictures) -eq $True){Copy-Item "$env:USERPROFILE\Pictures\*" "$global:targetpath\Users\$env:USERNAME\Pictures\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Searches) -eq $True){Copy-Item "$env:USERPROFILE\Searches\*" "$global:targetpath\Users\$env:USERNAME\Searches\*" -Recurse -Force}
+
 }
 
 BackupFilesAndFolders
+
+
+
+<#
+EVERYTHING TO HERE WORKS
+#>
+
+
 
 function global:ExportNetworkDrives{
 
