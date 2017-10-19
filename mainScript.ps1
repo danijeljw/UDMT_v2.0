@@ -362,26 +362,37 @@ function global:BackupFilesAndFolders{
 BackupFilesAndFolders
 
 
-
-<#
-EVERYTHING TO HERE WORKS
-#>
-
-
-
 function global:ExportNetworkDrives{
 
-    # Delete whitespace at end of each line
-    Get-Content "$global:TargetPath\Drives1.txt" | ForEach-Object {$_.TrimEnd()} | Set-Content "$global:TargetPath\Drives2.txt"
+    # PowerShell version of the "net use" command
+    Get-PSDrive -PSProvider FileSystem | Select-Object Name, DisplayRoot | Where-Object {$_.DisplayRoot -ne $null} > $Global:TargetPath\Drives2.txt
 
-    # Replace gap in drive assignment and path
-    Get-Content "$global:TargetPath\Drives2.txt" | ForEach-Object { $_ -replace ':   ', ': ' } | Set-Content "$global:TargetPath\Drives3.txt"
+    # Remove whitepace at end of each line
+    Get-Content $Global:TargetPath\Drives2.txt | ForEach-Object {$_.TrimEnd()} | Set-Content $Global:TargetPath\Drives3.txt
 
-    # Add 'net use ' to start of each line
-    Get-Content "$global:TargetPath\Drives3.txt" | ForEach-Object {"net use " + $_ } | Set-Content "$global:TargetPath\Drives4.txt"
+    # Replace '    ' with ': ' each line
+    Get-Content $Global:TargetPath\Drives3.txt | ForEach-Object {$_ -replace '    ', ': '} | Set-Content $Global:TargetPath\Drives4.txt
 
-    # Add ' /P:Yes' to end of each line for persistence of connection after restart
-    Get-Content "$global:TargetPath\Drives4.txt" | ForEach-Object {$_ + " /P:Yes" } | Set-Content "$global:TargetPath\Drives.bat"
+    # Prefix each line with 'net use ' for batch file at the end
+    Get-Content $Global:TargetPath\Drives4.txt | ForEach-Object {"net use " + $_} | Set-Content $Global:TargetPath\Drives5.txt
+
+    # Suffix each line with '" /P:Yes' for perisistance and share paths with spaces in name
+    Get-Content $Global:TargetPath\Drives5.txt | ForEach-Object {$_ + '" /P:Yes'} | Set-Content $Global:TargetPath\Drives6.txt
+
+    # Replace '\\' with '"\\' for share paths with spaces in name
+    Get-Content $Global:TargetPath\Drives6.txt | ForEach-Object {$_ -replace '\\', '"\\'} | Set-Content $Global:TargetPath\Drives7.txt
+
+    # Remove 'Name DisplayRoot' from file
+    Get-Content $Global:TargetPath\Drives7.txt | ForEach-Object {$_ -notmatch 'Name DisplayRoot'} | Set-Content $Global:TargetPath\Drives8.txt
+
+    # Remove '---- -----------' from each line
+    Get-Content $Global:TargetPath\Drives8.txt | ForEach-Object {$_ -notmatch '---- -----------'} | Set-Content $Global:TargetPath\Drives9.txt
+
+    # Add '@echo on' to first line of document
+    .{
+        "@echo on"
+        Get-Content $global:TargetPath\Drives9.txt | Select-Object -Skip 1
+    } | Set-Content | $Global:TargetPath\Drives.bat
 
     # Clean up reduntant files
     Remove-Item "$global:TargetPath\Drives*.txt" -Force
@@ -395,5 +406,3 @@ function global:ExportNetworkPrinters{
 
 ExportNetworkPrinters
 
-
-#>
