@@ -1,4 +1,4 @@
-﻿function global:QueryUSBDriveConnected{
+﻿function Global:QueryUSBDriveConnected{
 
     # Box window asking user input Yes/No
     Add-Type -AssemblyName PresentationCore,PresentationFramework
@@ -9,7 +9,8 @@
     $Global:USBDriveConnectedQuery = [System.Windows.MessageBox]::Show($MessageBody,$MessageTitle,$ButtonType,$MessageIcon)
  
     # Box advising USB HDD needs to be connected first
-    If ($Global:USBDriveConnectedQuery -eq "No"){
+    If ($Global:USBDriveConnectedQuery -eq "No")
+    {
         Add-Type -AssemblyName PresentationCore,PresentationFramework
         $ButtonType = [System.Windows.MessageBoxButton]::OK
         $MessageIcon = [System.Windows.MessageBoxImage]::Error
@@ -38,7 +39,8 @@ function Global:WarningCloseApps{
 
     # If not OK to close these applications, exit program
     $YES_Only = "^[esyESY]+$"
-    If (-not( $Global:Apps2Shutdown -match $YES_Only)){
+    If (-not( $Global:Apps2Shutdown -match $YES_Only))
+    {
         [console]::beep(1000,500)
         [console]::beep(1000,500)
         [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError G404","User Request Exit")
@@ -56,7 +58,7 @@ WarningCloseApps
 
 
 
-function global:ShowConnectedDrivesAndSelectDrive{
+function Global:ShowConnectedDrivesAndSelectDrive{
 
     # Clear the screen of text first
     Clear-Host
@@ -102,13 +104,15 @@ function global:ShowConnectedDrivesAndSelectDrive{
     $A2Z_Only = "^[d-fh-jl-zD-FH-JL-Z]+$"
 
     # Ensure that ONLY a drive letter is provided, else exit
-    If($Global:SelectedDrive.length -gt 1){
+    If ($Global:SelectedDrive.length -gt 1)
+    {
         [System.Windows.Forms.MessageBox]::Show($Global:SelectedDrive + " is not just the drive letter`n`nExiting app.`n`n`nError Code: D21","Not Just Drive Letter Provided")
         Exit
     }
 
     # Match drive letter provided is as per regex test, else exit
-    If(-Not($Global:SelectedDrive -match $A2Z_Only)){
+    If (-Not($Global:SelectedDrive -match $A2Z_Only))
+    {
         [System.Windows.Forms.MessageBox]::Show($Global:SelectedDrive + " is not a valid drive letter`n`n`nError Code: A1045","Incorrect Drive Letter Provided")
         Exit
     }
@@ -140,8 +144,10 @@ $Global:DirectoryComposite = @("Contacts",
                                "Pictures",
                                "Searches")
 
-function Global:DirectoryStructureComposite{
-    If (Test-Path $Global:TargetPath){
+function Global:DirectoryStructureComposite
+{
+    If (Test-Path $Global:TargetPath)
+    {
 
         # beeps to alert user
         [console]::beep(1000,500)
@@ -154,7 +160,8 @@ function Global:DirectoryStructureComposite{
 
         # If "YES" or "yes" is not typed in, will exit here, using regex
         $YES_Only = "^[esyESY]+$"
-        If (-not( $ContinueYes -match $YES_Only)){
+        If (-not( $ContinueYes -match $YES_Only))
+        {
             [console]::beep(1000,500)
             [console]::beep(1000,500)
             [System.Windows.Forms.MessageBox]::Show("Backup aborted.`n`n'YES' was not entered in previous box.`n`n`nError 1002","User Request Exit")
@@ -183,7 +190,7 @@ ForEach ( $x in $Global:DirectoryComposite ){
 
 $Global:Outlook_Exported_Settings = "$Global:TargetPath\Users\$env:USERNAME\Desktop\Outlook_Exported_Settings.txt"
 
-function global:ExportOutlookSettings{
+function Global:ExportOutlookSettings{
 
     # NOTE: This launches Outlook if it is not already running!
 
@@ -202,9 +209,12 @@ function global:ExportOutlookSettings{
 
     # Write out mapped PST for Outlook 2007
     '****************************Archive History for Office 2007' | Out-File $Global:Outlook_Exported_Settings -Append
-    If ((Test-Path HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog) -eq $True){
+    If ((Test-Path HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog) -eq $True)
+    {
         Get-Item HKCU:\software\Microsoft\Office\12.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
-    }Else{
+    }
+    Else
+    {
         'NO DATA EXISTS for Office 2007' | Out-File $Global:Outlook_Exported_Settings -Append
         '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
     }
@@ -212,9 +222,12 @@ function global:ExportOutlookSettings{
 
     # Write out mapped PST for Outlook 2010
     '****************************Archive History for Office 2010' | Out-File $Global:Outlook_Exported_Settings -Append
-    If ((Test-Path HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog) -eq $True){
+    If ((Test-Path HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog) -eq $True)
+    {
         Get-Item HKCU:\software\Microsoft\Office\14.0\Outlook\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
-    }Else{
+    }
+    Else
+    {
         'NO DATA EXISTS for Office 2010' | Out-File $Global:Outlook_Exported_Settings -Append
         '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
     }
@@ -222,33 +235,36 @@ function global:ExportOutlookSettings{
 
     # Write out mapped PST for Outlook 2013
     '****************************Archive History for Office 2013' | Out-File $Global:Outlook_Exported_Settings -Append
-    If ((Test-Path HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog) -eq $True){
+    If ((Test-Path HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog) -eq $True)
+    {
         Get-Item HKCU:\software\Microsoft\Office\15.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
-    }Else{
+    }
+    Else
+    {
         'NO DATA EXISTS for Office 2013' | Out-File $Global:Outlook_Exported_Settings -Append
         '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
     }
 
     # Write out mapped PST for Outlook 2016
     '****************************Archive History for Office 2016' | Out-File $Global:Outlook_Exported_Settings -Append
-    If ((Test-Path HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog) -eq $True){
+    If ((Test-Path HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog) -eq $True)
+    {
         Get-Item HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog | Select -ExpandProperty Property | where {$_ -match '.pst$'} | Out-File $Global:Outlook_Exported_Settings -Append
-    }Else{
+    }
+    Else
+    {
         'NO DATA EXISTS for Office 2013' | Out-File $Global:Outlook_Exported_Settings -Append
         '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
     }
 
-    # Variable Cleanup
-    #Remove-Variable -Name Outlook_Exported_Settings -Scope Global -Force
-    # not sure if i should leave this here or move it down?
 }
 
 ExportOutlookSettings
 
 # List of apps that need to be closed if they're currently open as an array
-$global:CloseOpenApps = @("outlook","firefox","chrome","iexplore","winword","powerpnt","onenote","excel")
+$Global:CloseOpenApps = @("outlook","firefox","chrome","iexplore","winword","powerpnt","onenote","excel")
 
-ForEach ($process in $global:CloseOpenApps)
+ForEach ($process in $Global:CloseOpenApps)
     {
         Stop-Process -Name $process -ErrorAction SilentlyContinue 
     }
@@ -258,72 +274,95 @@ ForEach ($process in $global:CloseOpenApps)
 
 
 
-$global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\" + $global:DirectoryComposite[1] + "\FilesNotCopied-UserData.txt"
-$global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\" + $global:DirectoryComposite[1] + "\FilesNotCopied-UserID.txt"
+$Global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\" + $Global:DirectoryComposite[1] + "\FilesNotCopied-UserData.txt"
+$Global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\" + $Global:DirectoryComposite[1] + "\FilesNotCopied-UserID.txt"
 
 
-New-Item $global:TooLongFileNamesUserData -ItemType File -Force
-New-Item $global:TooLongFileNamesUsersUserID -ItemType File -Force
+New-Item $Global:TooLongFileNamesUserData -ItemType File -Force
+New-Item $Global:TooLongFileNamesUsersUserID -ItemType File -Force
 
-function global:FileNamesNotCopiedTooLong{
-    "*****Files from C:\UserData*****" | Out-File $global:TooLongFileNamesUserData -Append
-    cmd /c "dir /b /s /a:d C:\UserData" | ForEach-Object{
-        If ( $_.length -gt 250 ){
-            $_ | Out-File $global:TooLongFileNamesUserData -Append
+function Global:FileNamesNotCopiedTooLong
+{
+    "*****Files from C:\UserData*****" | Out-File $Global:TooLongFileNamesUserData -Append
+    cmd /c "dir /b /s /a:d C:\UserData" | ForEach-Object
+    {
+        If ( $_.length -gt 250 )
+        {
+            $_ | Out-File $Global:TooLongFileNamesUserData -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Contacts*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
-    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Contacts" | ForEach-Object{
-        If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+
+    "*****Files from C:\Users\$env:USERNAME\Contacts*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
+    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Contacts" | ForEach-Object
+    
+    {
+        If ( $_.length -gt 250)
+        {
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Desktop*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
-    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Desktop" | ForEach-Object{
-        If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+    
+    "*****Files from C:\Users\$env:USERNAME\Desktop*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
+    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Desktop" | ForEach-Object
+    {
+        If ( $_.length -gt 250)
+        {
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Documents*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
-    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Documents" | ForEach-Object{
-        If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+
+    "*****Files from C:\Users\$env:USERNAME\Documents*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
+    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Documents" | ForEach-Object
+    {
+        If ( $_.length -gt 250)
+        {
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Downloads*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
-    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Downloads" | ForEach-Object{
-        If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+
+    "*****Files from C:\Users\$env:USERNAME\Downloads*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
+    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Downloads" | ForEach-Object
+    {
+        If ( $_.length -gt 250)
+        {
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Favourites*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
-    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Favourites" | ForEach-Object{
-        If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+
+    "*****Files from C:\Users\$env:USERNAME\Favourites*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
+    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Favourites" | ForEach-Object
+    {
+        If ( $_.length -gt 250)
+        {
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Links*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
-    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Links" | ForEach-Object{
-        If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+
+    "*****Files from C:\Users\$env:USERNAME\Links*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
+    cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Links" | ForEach-Object
+    {
+        If ( $_.length -gt 250)
+        {
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Music*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
+
+    "*****Files from C:\Users\$env:USERNAME\Music*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Music" | ForEach-Object{
         If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Pictures*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
+    "*****Files from C:\Users\$env:USERNAME\Pictures*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Pictures" | ForEach-Object{
         If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
-    "*****Files from C:\Users\$env:USERNAME\Searches*****" | Out-File $global:TooLongFileNamesUsersUserID -Append
+    "*****Files from C:\Users\$env:USERNAME\Searches*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Searches" | ForEach-Object{
         If ( $_.length -gt 250){
-            $_ | Out-File $global:TooLongFileNamesUsersUserID -Append
+            $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
 }
@@ -337,28 +376,28 @@ FileNamesNotCopiedTooLong
 
 
 
-function global:BackupFilesAndFolders{
+function Global:BackupFilesAndFolders{
 
     # Backup UserData folder
-    Copy-Item C:\UserData\* $global:TargetPath\UserData -Recurse -Force
+    Copy-Item C:\UserData\* $Global:TargetPath\UserData -Recurse -Force
 
     # Backup each folder in UsersUserID Folder
-    If ((Test-Path $env:USERPROFILE\Contacts) -eq $True){Copy-Item "$env:USERPROFILE\Contacts\*" "$global:targetpath\Users\$env:USERNAME\Contacts\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Desktop) -eq $True){Copy-Item "$env:USERPROFILE\Desktop\*" "$global:targetpath\Users\$env:USERNAME\Desktop\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Documents) -eq $True){Copy-Item "$env:USERPROFILE\Documents\*" "$global:targetpath\Users\$env:USERNAME\Documents\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Downloads) -eq $True){Copy-Item "$env:USERPROFILE\Downloads\*" "$global:targetpath\Users\$env:USERNAME\Downloads\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Favourites) -eq $True){Copy-Item "$env:USERPROFILE\Favourites\*" "$global:targetpath\Users\$env:USERNAME\Favourites\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Links) -eq $True){Copy-Item "$env:USERPROFILE\Links\*" "$global:targetpath\Users\$env:USERNAME\Links\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Music) -eq $True){Copy-Item "$env:USERPROFILE\Music\*" "$global:targetpath\Users\$env:USERNAME\Music\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Pictures) -eq $True){Copy-Item "$env:USERPROFILE\Pictures\*" "$global:targetpath\Users\$env:USERNAME\Pictures\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Searches) -eq $True){Copy-Item "$env:USERPROFILE\Searches\*" "$global:targetpath\Users\$env:USERNAME\Searches\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Contacts) -eq $True){Copy-Item "$env:USERPROFILE\Contacts\*" "$Global:targetpath\Users\$env:USERNAME\Contacts\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Desktop) -eq $True){Copy-Item "$env:USERPROFILE\Desktop\*" "$Global:targetpath\Users\$env:USERNAME\Desktop\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Documents) -eq $True){Copy-Item "$env:USERPROFILE\Documents\*" "$Global:targetpath\Users\$env:USERNAME\Documents\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Downloads) -eq $True){Copy-Item "$env:USERPROFILE\Downloads\*" "$Global:targetpath\Users\$env:USERNAME\Downloads\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Favourites) -eq $True){Copy-Item "$env:USERPROFILE\Favourites\*" "$Global:targetpath\Users\$env:USERNAME\Favourites\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Links) -eq $True){Copy-Item "$env:USERPROFILE\Links\*" "$Global:targetpath\Users\$env:USERNAME\Links\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Music) -eq $True){Copy-Item "$env:USERPROFILE\Music\*" "$Global:targetpath\Users\$env:USERNAME\Music\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Pictures) -eq $True){Copy-Item "$env:USERPROFILE\Pictures\*" "$Global:targetpath\Users\$env:USERNAME\Pictures\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Searches) -eq $True){Copy-Item "$env:USERPROFILE\Searches\*" "$Global:targetpath\Users\$env:USERNAME\Searches\*" -Recurse -Force}
 
 }
 
 BackupFilesAndFolders
 
 
-function global:ExportNetworkDrives{
+function Global:ExportNetworkDrives{
 
     # PowerShell version of the "net use" command
     Get-PSDrive -PSProvider FileSystem | Select-Object Name, DisplayRoot | Where-Object {$_.DisplayRoot -ne $null} > $Global:TargetPath\Drives2.txt
@@ -385,16 +424,16 @@ function global:ExportNetworkDrives{
     Get-Content $Global:TargetPath\Drives8.txt | ForEach-Object {$_ -notmatch '---- -----------'} | Set-Content $Global:TargetPath\Drives9.txt
 
     # Convert DrivesX.txt to BAT file
-    Get-Content $global:TargetPath\Drives9.txt | ForEach-Object {$_} | Set-Content "$Global:TargetPath\Drives.bat"
+    Get-Content $Global:TargetPath\Drives9.txt | ForEach-Object {$_} | Set-Content "$Global:TargetPath\Drives.bat"
 
     # Clean up reduntant files
-    Remove-Item "$global:TargetPath\Drives*.txt" -Force
+    Remove-Item "$Global:TargetPath\Drives*.txt" -Force
 }
 
 ExportNetworkDrives
 
-function global:ExportNetworkPrinters{
-    Get-WMIObject Win32_Printer -ComputerName $env:COMPUTERNAME | where{$_.Name -like “*\\*”} | select name | Out-File "$global:TargetPath\Printers.txt" -Append
+function Global:ExportNetworkPrinters{
+    Get-WMIObject Win32_Printer -ComputerName $env:COMPUTERNAME | where{$_.Name -like “*\\*”} | select name | Out-File "$Global:TargetPath\Printers.txt" -Append
 }
 
 ExportNetworkPrinters
