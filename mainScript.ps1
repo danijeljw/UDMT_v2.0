@@ -1,4 +1,9 @@
-﻿function Global:QueryUSBDriveConnected{
+﻿<#
+==============================================================================
+#>
+
+function Global:QueryUSBDriveConnected
+{
 
     # Box window asking user input Yes/No
     Add-Type -AssemblyName PresentationCore,PresentationFramework
@@ -24,22 +29,19 @@
 
 QueryUSBDriveConnected
 
-
-
 <#
 ==============================================================================
 #>
 
-
-
-function Global:WarningCloseApps{
+function Global:WarningCloseApps
+{
     # Prompt with list of apps that are required to be closed
     [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
     $Global:Apps2Shutdown = [Microsoft.VisualBasic.Interaction]::InputBox("The following applications will be closed automatically:`n`nWord, Excel, Outlook, PowerPoint, OneNote, Internet Explorer, Google Chrome`n`n`nType 'YES' into the box and click OK to confirm.", "Closing Mandatory Apps", "No")
 
     # If not OK to close these applications, exit program
     $YES_Only = "^[esyESY]+$"
-    If (-not( $Global:Apps2Shutdown -match $YES_Only))
+    If (-not($Global:Apps2Shutdown -match $YES_Only))
     {
         [console]::beep(1000,500)
         [console]::beep(1000,500)
@@ -50,15 +52,12 @@ function Global:WarningCloseApps{
 
 WarningCloseApps
 
-
-
 <#
 ==============================================================================
 #>
 
-
-
-function Global:ShowConnectedDrivesAndSelectDrive{
+function Global:ShowConnectedDrivesAndSelectDrive
+{
 
     # Clear the screen of text first
     Clear-Host
@@ -89,10 +88,10 @@ function Global:ShowConnectedDrivesAndSelectDrive{
         }
       }
     } | Out-File C:\Temp\listofdrives.txt -Append
+
     # Open the TXT file with the apps
     Start-Process -FilePath "listofdrives.txt" -WorkingDirectory "C:\Temp" 
-
-
+    
     # Wait 3 seconds before firing up
     Start-Sleep -s 3
     [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
@@ -120,29 +119,41 @@ function Global:ShowConnectedDrivesAndSelectDrive{
     # Let the user know backup will commence to the drive X they selected
     [System.Windows.Forms.MessageBox]::Show("The USB drive you selected is " + $Global:SelectedDrive + ".`nDo not disconnect the drive until process finalised.`n`nThis process can take between 15-60 minutes to complete!","Data Backup Start",0) 
 
-    .{
-        Stop-Process -Name notepad -ErrorAction SilentlyContinue 
-    }
+    Stop-Process -Name notepad -ErrorAction SilentlyContinue 
 }
 
 ShowConnectedDrivesAndSelectDrive
 
+<#
+==============================================================================
+#>
 
-$Global:CurrentYearOnly = (Get-Date).Year
+function Global:ParameterSetsRequired
+{
+    $Global:CurrentYearOnly = (Get-Date).Year
 
-$Global:TargetPath = $Global:SelectedDrive + ":\ICT_USB_BACKUP_" + $Global:CurrentYearOnly + "\" + $env:COMPUTERNAME
-# ie - $Global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
+    $Global:TargetPath = $Global:SelectedDrive + ":\ICT_USB_BACKUP_" + $Global:CurrentYearOnly + "\" + $env:COMPUTERNAME
+    # ie - $Global:TargetPath = X:\ICT_USB_BACKUP_2017\IT12345
 
-# Define the folders in in the UserProfile folder in C:\Users\X
-$Global:DirectoryComposite = @("Contacts",
-                               "Desktop",
-                               "Documents",
-                               "Downloads",
-                               "Favourites",
-                               "Links",
-                               "Music",
-                               "Pictures",
-                               "Searches")
+    # Define the folders in in the UserProfile folder in C:\Users\X
+    $Global:DirectoryComposite = @("Contacts",
+                                   "Desktop",
+                                   "Documents",
+                                   "Downloads",
+                                   "Favourites",
+                                   "Links",
+                                   "Music",
+                                   "Pictures",
+                                   "Searches")
+}
+
+ParameterSetsRequired
+
+
+
+<#
+==============================================================================
+#>
 
 function Global:DirectoryStructureComposite
 {
@@ -160,7 +171,7 @@ function Global:DirectoryStructureComposite
 
         # If "YES" or "yes" is not typed in, will exit here, using regex
         $YES_Only = "^[esyESY]+$"
-        If (-not( $ContinueYes -match $YES_Only))
+        If (-not($ContinueYes -match $YES_Only))
         {
             [console]::beep(1000,500)
             [console]::beep(1000,500)
@@ -170,33 +181,57 @@ function Global:DirectoryStructureComposite
     }
 }
 
-# Call functions
-Global:DirectoryStructureComposite
+DirectoryStructureComposite
 
-# Make the C:\UserData folder on the USB drive
-New-Item "$Global:TargetPath\UserData" -ItemType Directory -Force
 
-# Create an Outlook signatures folder on the USB drive
-New-Item "$Global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures" -ItemType Directory -Force
 
-# Create Google Chrome bookmarks folder on the USB drive
-New-Item "$Global:TargetPath\Users\$env:USERNAME\AppData\Local\Google\Chrome\User Data\Default" -ItemType Directory -Force
+<#
+==============================================================================
+#>
+
+function Global:MakeOtherFoldersRequired
+{
+    # Make the C:\UserData folder on the USB drive
+    New-Item "$Global:TargetPath\UserData" -ItemType Directory -Force
+
+    # Create an Outlook signatures folder on the USB drive
+    New-Item "$Global:TargetPath\Users\$env:USERNAME\Roaming\Microsoft\Signatures" -ItemType Directory -Force
+
+    # Create Google Chrome bookmarks folder on the USB drive
+    New-Item "$Global:TargetPath\Users\$env:USERNAME\AppData\Local\Google\Chrome\User Data\Default" -ItemType Directory -Force
     
-# Using folders listed in the array $Global:DirectoryComposite, create each folder
-ForEach ( $x in $Global:DirectoryComposite ){
-    New-Item $Global:TargetPath\Users\$env:USERNAME\$x -ItemType Directory -Force
-    
+    # Using folders listed in the array $Global:DirectoryComposite, create each folder
+    ForEach ($x in $Global:DirectoryComposite)
+    {
+        New-Item $Global:TargetPath\Users\$env:USERNAME\$x -ItemType Directory -Force
+    }
 }
 
-$Global:Outlook_Exported_Settings = "$Global:TargetPath\Users\$env:USERNAME\Desktop\Outlook_Exported_Settings.txt"
+MakeOtherFoldersRequired
 
-function Global:ExportOutlookSettings{
 
-    # NOTE: This launches Outlook if it is not already running!
+
+
+
+
+<#
+==============================================================================
+#>
+
+
+
+
+function Global:ExportOutlookSettings
+{
+
+    # This parameter is required here
+    $Global:Outlook_Exported_Settings = "$Global:TargetPath\Users\$env:USERNAME\Desktop\Outlook_Exported_Settings.txt"
+
 
     # Create OutlookProfileSettings Text File
     New-Item $Global:Outlook_Exported_Settings -ItemType File -Force
     
+
     # Write settings to Outlook_Exported_Settings text file
     '****************************Currently attached archives' | Out-File $Global:Outlook_Exported_Settings -Append
     $Outlook = New-Object -Comobject Outlook.Application
@@ -205,7 +240,7 @@ function Global:ExportOutlookSettings{
     $AttachedArchives = $Namespace.Stores | where {$_.ExchangeStoreType -eq 3} | Select-Object DisplayName,FilePath
     $MailBoxes | Out-File -FilePath $Global:Outlook_Exported_Settings -Append
     $AttachedArchives | Out-File -FilePath $Global:Outlook_Exported_Settings -Append
-
+    
 
     # Write out mapped PST for Outlook 2007
     '****************************Archive History for Office 2007' | Out-File $Global:Outlook_Exported_Settings -Append
@@ -245,6 +280,7 @@ function Global:ExportOutlookSettings{
         '                              ' | Out-File $Global:Outlook_Exported_Settings -Append
     }
 
+
     # Write out mapped PST for Outlook 2016
     '****************************Archive History for Office 2016' | Out-File $Global:Outlook_Exported_Settings -Append
     If ((Test-Path HKCU:\software\Microsoft\Office\16.0\Outlook\Search\Catalog) -eq $True)
@@ -261,32 +297,47 @@ function Global:ExportOutlookSettings{
 
 ExportOutlookSettings
 
-# List of apps that need to be closed if they're currently open as an array
-$Global:CloseOpenApps = @("outlook","firefox","chrome","iexplore","winword","powerpnt","onenote","excel")
-
-ForEach ($process in $Global:CloseOpenApps)
-    {
-        Stop-Process -Name $process -ErrorAction SilentlyContinue 
-    }
 
 
 
 
 
 
-$Global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\" + $Global:DirectoryComposite[1] + "\FilesNotCopied-UserData.txt"
-$Global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\" + $Global:DirectoryComposite[1] + "\FilesNotCopied-UserID.txt"
 
 
-New-Item $Global:TooLongFileNamesUserData -ItemType File -Force
-New-Item $Global:TooLongFileNamesUsersUserID -ItemType File -Force
+
+
+function Global:KillAppsNow
+{
+    # List of apps that need to be closed if they're currently open as an array
+    $Global:CloseOpenApps = @("outlook","firefox","chrome","iexplore","winword","powerpnt","onenote","excel")
+
+    ForEach ($process in $Global:CloseOpenApps)
+        {
+            Stop-Process -Name $process -ErrorAction SilentlyContinue 
+        }
+}
+
+KillAppsNow
+
+
+
+
+
 
 function Global:FileNamesNotCopiedTooLong
 {
+    $Global:TooLongFileNamesUserData = "C:\Users\$env:USERNAME\" + $Global:DirectoryComposite[1] + "\FilesNotCopied-UserData.txt"
+    $Global:TooLongFileNamesUsersUserID = "C:\Users\$env:USERNAME\" + $Global:DirectoryComposite[1] + "\FilesNotCopied-UserID.txt"
+    
+    New-Item $Global:TooLongFileNamesUserData -ItemType File -Force
+    New-Item $Global:TooLongFileNamesUsersUserID -ItemType File -Force
+
+
     "*****Files from C:\UserData*****" | Out-File $Global:TooLongFileNamesUserData -Append
     cmd /c "dir /b /s /a:d C:\UserData" | ForEach-Object
     {
-        If ( $_.length -gt 250 )
+        If ($_.length -gt 250)
         {
             $_ | Out-File $Global:TooLongFileNamesUserData -Append
         }
@@ -296,7 +347,7 @@ function Global:FileNamesNotCopiedTooLong
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Contacts" | ForEach-Object
     
     {
-        If ( $_.length -gt 250)
+        If ($_.length -gt 250)
         {
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
@@ -305,7 +356,7 @@ function Global:FileNamesNotCopiedTooLong
     "*****Files from C:\Users\$env:USERNAME\Desktop*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Desktop" | ForEach-Object
     {
-        If ( $_.length -gt 250)
+        If ($_.length -gt 250)
         {
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
@@ -314,7 +365,7 @@ function Global:FileNamesNotCopiedTooLong
     "*****Files from C:\Users\$env:USERNAME\Documents*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Documents" | ForEach-Object
     {
-        If ( $_.length -gt 250)
+        If ($_.length -gt 250)
         {
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
@@ -323,7 +374,7 @@ function Global:FileNamesNotCopiedTooLong
     "*****Files from C:\Users\$env:USERNAME\Downloads*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Downloads" | ForEach-Object
     {
-        If ( $_.length -gt 250)
+        If ($_.length -gt 250)
         {
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
@@ -332,7 +383,7 @@ function Global:FileNamesNotCopiedTooLong
     "*****Files from C:\Users\$env:USERNAME\Favourites*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Favourites" | ForEach-Object
     {
-        If ( $_.length -gt 250)
+        If ($_.length -gt 250)
         {
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
@@ -341,7 +392,7 @@ function Global:FileNamesNotCopiedTooLong
     "*****Files from C:\Users\$env:USERNAME\Links*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Links" | ForEach-Object
     {
-        If ( $_.length -gt 250)
+        If ($_.length -gt 250)
         {
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
@@ -349,19 +400,19 @@ function Global:FileNamesNotCopiedTooLong
 
     "*****Files from C:\Users\$env:USERNAME\Music*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Music" | ForEach-Object{
-        If ( $_.length -gt 250){
+        If ($_.length -gt 250){
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
     "*****Files from C:\Users\$env:USERNAME\Pictures*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Pictures" | ForEach-Object{
-        If ( $_.length -gt 250){
+        If ($_.length -gt 250){
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
     "*****Files from C:\Users\$env:USERNAME\Searches*****" | Out-File $Global:TooLongFileNamesUsersUserID -Append
     cmd /c "dir /b /s /a:d C:\Users\%USERNAME%\Searches" | ForEach-Object{
-        If ( $_.length -gt 250){
+        If ($_.length -gt 250){
             $_ | Out-File $Global:TooLongFileNamesUsersUserID -Append
         }
     }
@@ -376,8 +427,8 @@ FileNamesNotCopiedTooLong
 
 
 
-function Global:BackupFilesAndFolders{
-
+function Global:BackupFilesAndFolders
+{
     # Backup UserData folder
     Copy-Item C:\UserData\* $Global:TargetPath\UserData -Recurse -Force
 
@@ -391,14 +442,22 @@ function Global:BackupFilesAndFolders{
     If ((Test-Path $env:USERPROFILE\Music) -eq $True){Copy-Item "$env:USERPROFILE\Music\*" "$Global:targetpath\Users\$env:USERNAME\Music\*" -Recurse -Force}
     If ((Test-Path $env:USERPROFILE\Pictures) -eq $True){Copy-Item "$env:USERPROFILE\Pictures\*" "$Global:targetpath\Users\$env:USERNAME\Pictures\*" -Recurse -Force}
     If ((Test-Path $env:USERPROFILE\Searches) -eq $True){Copy-Item "$env:USERPROFILE\Searches\*" "$Global:targetpath\Users\$env:USERNAME\Searches\*" -Recurse -Force}
-
 }
 
 BackupFilesAndFolders
 
 
-function Global:ExportNetworkDrives{
 
+
+
+
+
+
+
+
+
+function Global:ExportNetworkDrives
+{
     # PowerShell version of the "net use" command
     Get-PSDrive -PSProvider FileSystem | Select-Object Name, DisplayRoot | Where-Object {$_.DisplayRoot -ne $null} > $Global:TargetPath\Drives2.txt
 
@@ -432,7 +491,19 @@ function Global:ExportNetworkDrives{
 
 ExportNetworkDrives
 
-function Global:ExportNetworkPrinters{
+
+
+
+
+
+
+
+
+
+
+
+function Global:ExportNetworkPrinters
+{
     Get-WMIObject Win32_Printer -ComputerName $env:COMPUTERNAME | where{$_.Name -like “*\\*”} | select name | Out-File "$Global:TargetPath\Printers.txt" -Append
 }
 
