@@ -433,15 +433,21 @@ function Global:BackupFilesAndFolders
     Copy-Item C:\UserData\* $Global:TargetPath\UserData -Recurse -Force
 
     # Backup each folder in UsersUserID Folder
-    If ((Test-Path $env:USERPROFILE\Contacts) -eq $True){Copy-Item "$env:USERPROFILE\Contacts\*" "$Global:targetpath\Users\$env:USERNAME\Contacts\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Desktop) -eq $True){Copy-Item "$env:USERPROFILE\Desktop\*" "$Global:targetpath\Users\$env:USERNAME\Desktop\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Documents) -eq $True){Copy-Item "$env:USERPROFILE\Documents\*" "$Global:targetpath\Users\$env:USERNAME\Documents\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Downloads) -eq $True){Copy-Item "$env:USERPROFILE\Downloads\*" "$Global:targetpath\Users\$env:USERNAME\Downloads\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Favourites) -eq $True){Copy-Item "$env:USERPROFILE\Favourites\*" "$Global:targetpath\Users\$env:USERNAME\Favourites\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Links) -eq $True){Copy-Item "$env:USERPROFILE\Links\*" "$Global:targetpath\Users\$env:USERNAME\Links\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Music) -eq $True){Copy-Item "$env:USERPROFILE\Music\*" "$Global:targetpath\Users\$env:USERNAME\Music\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Pictures) -eq $True){Copy-Item "$env:USERPROFILE\Pictures\*" "$Global:targetpath\Users\$env:USERNAME\Pictures\*" -Recurse -Force}
-    If ((Test-Path $env:USERPROFILE\Searches) -eq $True){Copy-Item "$env:USERPROFILE\Searches\*" "$Global:targetpath\Users\$env:USERNAME\Searches\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Contacts) -eq $True){Copy-Item "$env:USERPROFILE\Contacts\*" "$Global:TargetPath\Users\$env:USERNAME\Contacts\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Desktop) -eq $True){Copy-Item "$env:USERPROFILE\Desktop\*" "$Global:TargetPath\Users\$env:USERNAME\Desktop\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Documents) -eq $True){Copy-Item "$env:USERPROFILE\Documents\*" "$Global:TargetPath\Users\$env:USERNAME\Documents\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Downloads) -eq $True){Copy-Item "$env:USERPROFILE\Downloads\*" "$Global:TargetPath\Users\$env:USERNAME\Downloads\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Favourites) -eq $True){Copy-Item "$env:USERPROFILE\Favourites\*" "$Global:TargetPath\Users\$env:USERNAME\Favourites\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Links) -eq $True){Copy-Item "$env:USERPROFILE\Links\*" "$Global:TargetPath\Users\$env:USERNAME\Links\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Music) -eq $True){Copy-Item "$env:USERPROFILE\Music\*" "$Global:TargetPath\Users\$env:USERNAME\Music\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Pictures) -eq $True){Copy-Item "$env:USERPROFILE\Pictures\*" "$Global:TargetPath\Users\$env:USERNAME\Pictures\*" -Recurse -Force}
+    If ((Test-Path $env:USERPROFILE\Searches) -eq $True){Copy-Item "$env:USERPROFILE\Searches\*" "$Global:TargetPath\Users\$env:USERNAME\Searches\*" -Recurse -Force}
+    
+    # Backup all the signatures to USB drive
+    If ((Test-Path $env:USERPROFILE\AppData\Roaming\Microsoft\Signatures) -eq $True){Copy-Item "$env:USERPROFILE\AppData\Roaming\Microsoft\Signatures\*" "$Global:TargetPath\Users\$env:USERNAME\AppData\Roaming\Microsoft\Signatures\*" -Recurse -Force}
+    
+    # Backup the Google Chrome bookmarks to USB drive
+    If ((Test-Path "$env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\Bookmarks") -eq $True){Copy-Item "$env:USERPROFILE\AppData\Local\Google\Chrome\User Data\Default\Bookmarks" "$Global:TargetPath\Users\$env:USERNAME\AppData\Local\Google\Chrome\User Data\Default\Bookmarks" -Recurse -Force}
 }
 
 BackupFilesAndFolders
@@ -467,23 +473,29 @@ function Global:ExportNetworkDrives
     # Replace '    ' with ': ' each line
     Get-Content $Global:TargetPath\Drives3.txt | ForEach-Object {$_ -replace '    ', ': '} | Set-Content $Global:TargetPath\Drives4.txt
 
+    # Interim fix, checked steps
+    Get-Content $Global:TargetPath\Drives4.txt | ? {$_.trim() -ne "" } | Set-Content $Global:TargetPath\Drives5a.txt
+
+    # Interim fix, checked steps
+    Get-Content $Global:TargetPath\Drives5a.txt | ForEach-Object {$_ -replace 'Name DisplayRoot', ''} | Set-Content $Global:TargetPath\Drives5b.txt
+
+    # Interim fix, checked steps
+    Get-Content $Global:TargetPath\Drives5b.txt | ForEach-Object {$_ -replace '---- -----------', ''} | Set-Content $Global:TargetPath\Drives5c.txt
+
+    # Interim fix, checked steps
+    Get-Content $Global:TargetPath\Drives5c.txt | ? {$_.trim() -ne "" } | Set-Content $Global:TargetPath\Drives5d.txt
+
     # Prefix each line with 'net use ' for batch file at the end
-    Get-Content $Global:TargetPath\Drives4.txt | ForEach-Object {"net use " + $_} | Set-Content $Global:TargetPath\Drives5.txt
+    Get-Content $Global:TargetPath\Drives5d.txt | ForEach-Object {"net use " + $_} | Set-Content $Global:TargetPath\Drives6.txt
 
     # Suffix each line with '" /P:Yes' for perisistance and share paths with spaces in name
-    Get-Content $Global:TargetPath\Drives5.txt | ForEach-Object {$_ + '" /P:Yes'} | Set-Content $Global:TargetPath\Drives6.txt
+    Get-Content $Global:TargetPath\Drives6.txt | ForEach-Object {$_ + '" /P:Yes'} | Set-Content $Global:TargetPath\Drives7.txt
 
     # Replace '\\' with '"\\' for share paths with spaces in name
-    Get-Content $Global:TargetPath\Drives6.txt | ForEach-Object {$_ -replace '\\', '"\\'} | Set-Content $Global:TargetPath\Drives7.txt
+    Get-Content $Global:TargetPath\Drives7.txt | ForEach-Object {$_ -replace ': \\', ': "\'} | Set-Content $Global:TargetPath\Drives8.txt
 
-    # Remove 'Name DisplayRoot' from file
-    Get-Content $Global:TargetPath\Drives7.txt | ForEach-Object {$_ -notmatch 'Name DisplayRoot'} | Set-Content $Global:TargetPath\Drives8.txt
-
-    # Remove '---- -----------' from each line
-    Get-Content $Global:TargetPath\Drives8.txt | ForEach-Object {$_ -notmatch '---- -----------'} | Set-Content $Global:TargetPath\Drives9.txt
-
-    # Convert DrivesX.txt to BAT file
-    Get-Content $Global:TargetPath\Drives9.txt | ForEach-Object {$_} | Set-Content "$Global:TargetPath\Drives.bat"
+    # Append Drives8.txt to BAT file
+    Get-Content $Global:TargetPath\Drives8.txt | ForEach-Object {$_} | Set-Content "$Global:TargetPath\Drives.bat" -Force
 
     # Clean up reduntant files
     Remove-Item "$Global:TargetPath\Drives*.txt" -Force
@@ -509,3 +521,17 @@ function Global:ExportNetworkPrinters
 
 ExportNetworkPrinters
 
+
+
+
+function Global:BackupIsNowComplete
+{
+    Add-Type -AssemblyName PresentationCore,PresentationFramework
+    $ButtonType = [System.Windows.MessageBoxButton]::OK
+    $MessageIcon = [System.Windows.MessageBoxImage]::Exclamation
+    $MessageBody = "Data has been backed up! Process is now complete.`n`n`n`nClick OK to exit."
+    $MessageTitle = "UDMT 2.0 Process Complete"
+    $Global:QueryUSBDriveConnected = [System.Windows.MessageBox]::Show($MessageBody,$MessageTitle,$ButtonType,$MessageIcon)
+    # Exit here because USB HDD not connected first
+    Exit
+}
